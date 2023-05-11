@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 ///数组列表中的最大距离
 public class Solution {
@@ -191,6 +190,62 @@ public class Solution {
             }
             result++;
         }
+        return result;
+    }
+
+
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        char[] temp = s.toCharArray();
+        int i = 0;
+        HashSet<Integer> hashSet = new HashSet<Integer>();
+        int result = 0;
+        for (int j = 0; j < s.length(); j++) {
+            int currentResult = getCharNum(temp, i, j , hashSet);
+            while (currentResult > 2) {
+                i++;
+                currentResult = getCharNum(temp, i, j , hashSet);
+            }
+            result = Math.max((j - i + 1), result);
+        }
+
+        return result;
+    }
+
+    private int getCharNum(char[] chars, int i, int j, HashSet<Integer> hashSet) {
+        hashSet.clear();
+        while (i < j + 1) {
+            hashSet.add(new Integer(chars[i]));
+            i++;
+        }
+        return hashSet.size();
+    }
+
+
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+
+        int n = s.length();
+        if (n < k + 1) return n;
+
+        int right = 0;
+        int left = 0;
+        int result = 0;
+        HashMap<Character, Integer> hashmap = new HashMap<Character, Integer>();
+
+        while (right < s.length() - 1) {
+            if (hashmap.keySet().size() < k + 1) {
+                hashmap.put(s.charAt(right), right);
+            }
+
+            if (hashmap.keySet().size() == k + 1) {
+                int del_idx = Collections.min(hashmap.values());
+                Character delChar = s.charAt(del_idx);
+                hashmap.remove(delChar);
+                left = del_idx + 1;
+            }
+            result = Math.max(result, (right - left + 1));
+
+        }
+
         return result;
     }
 
